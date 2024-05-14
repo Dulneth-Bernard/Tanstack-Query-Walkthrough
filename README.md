@@ -1,3 +1,9 @@
+
+#Testing Tanstack query an async state management library 
+## I dont minf if you go through this repo but this is just me being me and testing out a the ntty and gritty features of the react query library
+
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
