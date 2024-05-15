@@ -1,28 +1,35 @@
 import { useToDosIdS } from "../services/queries";
 
-export default function ToDo(){
+import {  useIsFetching } from "@tanstack/react-query";
 
+export default function ToDo(){
+    //hook that returns the number of the queries that your application is loading or fetching in the background
+    const isFetching = useIsFetching();
+    
     //calling the useQuery function to fetch data
     const todoidQuery = useToDosIdS();
 
-    //we have access to values in object from useQuery
-    if(todoidQuery.isPending){
-        return <span>loading...</span>
-    }
-
-    if(todoidQuery.isError){
-        return <span>error </span>
-    }
+ 
     
     //At this point we can assume data is available
     return(
 
         <>
-        {todoidQuery.data.map((id)=>(
+
+
+        {/* Is fetching hook */}
+        <p>Global is fetching {isFetching}</p>
+
+        {/* fetchStatus gives information about the queryFn: Is it running or not */}
+        {todoidQuery.fetchStatus}
+
+
+        {/* Map through all data , if we dotn check isError and isPending typescript assumes its undefined*/}
+        {todoidQuery.data?.map((id)=>(
              <p key={id}>{id}</p>
         ))}
 
-        {todoidQuery.fetchStatus}
+    
 
            
         
