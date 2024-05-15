@@ -1,6 +1,7 @@
 
 
-import ToDo from "./components/Todo";
+import Todos from "./components/Todos";
+
 
 function App() {
   
@@ -12,7 +13,7 @@ function App() {
 
    return (
     <>
-      <ToDo/>
+      <Todos/>
 
     </>
    );
