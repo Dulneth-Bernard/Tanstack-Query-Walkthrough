@@ -1,6 +1,7 @@
 
-#Testing Tanstack query an async state management library 
-## I dont minf if you go through this repo but this is just me being me and testing out a the ntty and gritty features of the react query library
+# Testing Tanstack query an async state management library 
+
+## I dont mind if you go through this repo but this is just me being me and testing out the nitty and gritty features of the react query library AKA Tanstack Query
 
 
 
