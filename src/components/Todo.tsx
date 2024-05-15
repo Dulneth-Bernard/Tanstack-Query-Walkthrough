@@ -1,15 +1,14 @@
-import { useToDosIdS } from "../services/queries";
+import { useToDosIdS, useTodos } from "../services/queries";
 
-import {  useIsFetching } from "@tanstack/react-query";
 
 export default function ToDo(){
-    //hook that returns the number of the queries that your application is loading or fetching in the background
-    const isFetching = useIsFetching();
+
     
     //calling the useQuery function to fetch data
     const todoidQuery = useToDosIdS();
 
- 
+    //calling use useTodo query
+    const todoQueries = useTodos(todoidQuery.data);
     
     //At this point we can assume data is available
     return(
@@ -17,18 +16,22 @@ export default function ToDo(){
         <>
 
 
-        {/* Is fetching hook */}
-        <p>Global is fetching {isFetching}</p>
+        {/* Its going to fetch 1 by 1 in parallel , goof for performance, usefull for multiple queries you dont know how many   */}
+        <ul>
+            {todoQueries.map(({data})=>(
+                <li key={data?.id}>
+                    <div>id : {data?.id}</div>
+                    <span>
+                        <strong>Title: </strong> {data?.title}
+                        <strong> Desc: </strong>{data?.description}
 
-        {/* fetchStatus gives information about the queryFn: Is it running or not */}
-        {todoidQuery.fetchStatus}
+                    </span>
 
-
-        {/* Map through all data , if we dotn check isError and isPending typescript assumes its undefined*/}
-        {todoidQuery.data?.map((id)=>(
-             <p key={id}>id : {id}</p>
-        ))}
-
+                </li>
+            
+            ))}
+        </ul>
+       
     
 
            

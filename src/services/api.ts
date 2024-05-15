@@ -17,6 +17,6 @@ export const getTodosIds = async () => {
 
 //Get todos by a id , 
 export const getTodo =  async(id : number)=>{
-    return (await axiosInstance.get<Todo[]>(`todo/${id}`)).data ;
+    return (await axiosInstance.get<Todo[]>(`todos/${id}`)).data ;
 
 }
