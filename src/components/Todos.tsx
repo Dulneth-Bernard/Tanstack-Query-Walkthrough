@@ -1,11 +1,13 @@
 import { SubmitHandler } from "react-hook-form";
-import { useCreateTodo } from "../services/mutations";
+import { useCreateTodo, useUpdateTodo } from "../services/mutations";
 import { useToDosIdS, useTodos } from "../services/queries";
 import { Todo } from "../types/todo";
 import { useForm } from "react-hook-form";
 
 export default function Todos(){
 
+    const {register,handleSubmit} =  useForm<Todo>();
+    
     
     //calling the useQuery function to fetch data
     const todoidQuery = useToDosIdS();
@@ -16,13 +18,22 @@ export default function Todos(){
     //Create to do function being called
     const createTodoMutation = useCreateTodo();
     
+    //UPDATE TO DO FUNCION BEINGCALLED
+    const updateTodoMutation = useUpdateTodo();
+    
     //Create a handler
     const handlerCreateTodoSubmit: SubmitHandler<Todo> = (data)=>{
         createTodoMutation.mutate(data);
     }
     
-    const {register,handleSubmit} =  useForm<Todo>();
-    
+    //update handler
+    const handleUpdateTodosubmit =(data: Todo| undefined)=>{
+        if (data){
+            updateTodoMutation.mutate({...data,checked:true})
+        }
+
+    }
+
     
     return(
 
@@ -32,7 +43,7 @@ export default function Todos(){
             <br />
             <input placeholder="Description" {...register("description")}/>
             <br />
-            <input type="submit" />
+            <input type="submit" disabled={createTodoMutation.isPending} value={createTodoMutation.isPending ? "adding.."  : "create"} />
         </form>
 
 
@@ -46,6 +57,11 @@ export default function Todos(){
                         <strong> Desc: </strong>{data?.description}
 
                     </span>
+                    <div>
+                        <button onClick={()=> handleUpdateTodosubmit(data)} disabled={data?.checked}>
+                            {data?.checked ? 'done' : "Mark as done"}
+                        </button>
+                    </div>
 
                 </li>
             
