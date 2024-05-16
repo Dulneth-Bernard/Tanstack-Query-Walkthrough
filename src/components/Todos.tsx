@@ -39,8 +39,13 @@ export default function Todos(){
     }
 
     //Delte handle
-    const handleDeleteTodo = (id: number) => deleteTodoMutation.mutate(id);
-
+    //Use mutateAsync instead of mutate to get a promise which will resolve on success or throw on an error. This can for example be used to compose side effects.
+    const handleDeleteTodo = async (id: number) =>{
+        await  deleteTodoMutation.mutateAsync(id)
+        console.log("Success");
+        
+    };
+    //with asyncMutate ,when above mutation is odne we can do something whenever that mutations is done
     
 
 
