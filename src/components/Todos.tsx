@@ -1,8 +1,9 @@
 import { SubmitHandler } from "react-hook-form";
-import { useCreateTodo, useUpdateTodo } from "../services/mutations";
+import { useCreateTodo, useDeleteTodo, useUpdateTodo } from "../services/mutations";
 import { useToDosIdS, useTodos } from "../services/queries";
 import { Todo } from "../types/todo";
 import { useForm } from "react-hook-form";
+import { queryOptions } from "@tanstack/react-query";
 
 export default function Todos(){
 
@@ -17,6 +18,9 @@ export default function Todos(){
     
     //Create to do function being called
     const createTodoMutation = useCreateTodo();
+
+    //Callign deleter query 
+    const deleteTodoMutation = useDeleteTodo();
     
     //UPDATE TO DO FUNCION BEINGCALLED
     const updateTodoMutation = useUpdateTodo();
@@ -33,6 +37,13 @@ export default function Todos(){
         }
 
     }
+
+    //Delte handle
+    const handleDeleteTodo = (id: number) => deleteTodoMutation.mutate(id);
+
+    
+
+
 
     
     return(
@@ -61,6 +72,14 @@ export default function Todos(){
                         <button onClick={()=> handleUpdateTodosubmit(data)} disabled={data?.checked}>
                             {data?.checked ? 'done' : "Mark as done"}
                         </button>
+                        {data && data.id && (
+                            <button onClick={()=>{ handleDeleteTodo(data.id!)}}>
+                            Delete
+                        </button>
+
+                        ) }
+                        
+
                     </div>
 
                 </li>

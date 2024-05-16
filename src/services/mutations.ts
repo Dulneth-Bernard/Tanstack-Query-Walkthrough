@@ -76,12 +76,25 @@ export function useUpdateTodo(){
 
 export function useDeleteTodo(){
     const queryClient = useQueryClient();
-    useMutation({
+    return useMutation({
         mutationFn: (id:number )=> deleteTodo(id),
 
         onSuccess: ()=>{
-            console.log("Deleted succesffuly")
+            console.log("Deleted succesffuly");
                 
+        },
+
+        onSettled: async  (_,error)=>{
+            if(error){
+                console.log("Error " + error);
+                
+            }else{
+                //Successfully deleted 
+                //invalidate query to show the list without the dewlted id
+                 await queryClient.invalidateQueries({queryKey: ["todos"]})
+
+            }
+
         }
         
 
