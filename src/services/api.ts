@@ -55,6 +55,13 @@ export const getProjects =  async (page= 1)=>{
 
 export const getProducts = async ({pageParam} : {pageParam : number} )=>{
     //Perscroll limit to 3
-    return await ((await axiosInstance.get<Product[]>(`products?_page=${pageParam +1 }&_limit=3`)).data);
+    return  ((await axiosInstance.get<Product[]>(`products?_page=${pageParam +1 }&_limit=3`)).data);
 
+}
+
+
+//Get product by ids
+
+export const getProduct =  async(id: number )=>{
+    return (await axiosInstance.get<Product>(`products/${id}`)).data
 }

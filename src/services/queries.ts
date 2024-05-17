@@ -1,6 +1,7 @@
-import { useQuery, useQueries, keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
-import { getProducts, getProjects, getTodosIds } from "./api";
+import { useQuery, useQueries, keepPreviousData, useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { getProducts, getProjects, getTodosIds,getProduct } from "./api";
 import { getTodo } from "./api";
+import { Product } from "../types/products";
 
 //Get all the todos
 export function useToDosIdS(){
@@ -91,3 +92,31 @@ export function useProducts(){
   });
 }
 //If your API doesn't return a cursor, you can use the pageParam as a cursor. Because getNextPageParam and getPreviousPageParam also get the pageParamof the current page, you can use it to calculate the next / previous page param.
+
+//null because i out useState we gaev null as no id initially
+export function useProduct( id : number | null){
+  const queryClient = useQueryClient();
+
+  return useQuery({
+    queryKey: ["product", {id}],
+    //intellisence screasm as in api we specified id as number but here its num or null, react doesnt know if ti snum or null but we know its num or null by using enable property, if there is a id only will the function run that way we dont need to worry of it being null
+    queryFn:  ()  => getProduct(id!),//put ! to tell we know id is defined evon tho react does know
+    //If ther is an id !! mean true enabled will be triggered as true and that whern the Queryfunction willrun 
+    enabled: !!id,
+
+    //increase performance by reducing uneccasssary dealy in loading
+    placeholderData:()=>{
+      // WE ARE GETTING EX {"id":13,"name":"product 13"} as a placeholder from useProducts query
+      //so in devtools the query is laoidng state, but with palce holder it slaready chached and siaplyed in a blink of an eye
+      //getQueryData is a synchronous function that can be used to get an existing query's cached data. If the query does not exist, undefined will be returned. docs 
+
+      //While product is loading i can show you some part of the products becase useProductsQuery we had the id of the product so its cached
+      const cachedProducts = (queryClient.getQueryData(["products"])as {pages: Product[] | undefined}) ?.pages?.flat(2)  // as is used to defined th type\
+      //flat() method of Array instances creates a new array with all sub-array elements concatenated into it recursively up to the specified depth.
+      //Just make our app faster
+      if(cachedProducts){
+        //if cache is available, return items from cahced product where id is hooks id
+        return  cachedProducts.find((item)=>  item.id === id )
+      }
+    }
+})}

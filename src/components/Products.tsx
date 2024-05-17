@@ -1,11 +1,15 @@
-import { useProducts } from "../services/queries"
+import { useProducts,useProduct } from "../services/queries"
 import { Fragment, useState } from "react";
 
 export default function Products(){
 
     const productsQuery = useProducts();
     const [selectedProductId, setSelectedProductId] = useState<number | null>(null)
-   
+   //Getting queries conditionally or get Queries based on previos Queries
+    //Get complete to do by Id:
+    const productQuery =useProduct(selectedProductId);
+
+
     return (
         <>
           {productsQuery.data?.pages.map((group, index) => (
@@ -38,7 +42,7 @@ export default function Products(){
             </button>
           </div>
           <div>Selected product:</div>
-          {JSON.stringify(productsQuery.data)}
+          {JSON.stringify(productQuery.data)}
         </>
       );
 }
