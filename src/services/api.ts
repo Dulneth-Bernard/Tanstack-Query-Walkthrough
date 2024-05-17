@@ -2,6 +2,7 @@
 import axios from "axios";
 
 import { Todo } from "../types/todo";
+import { Project } from "../types/project";
 
 const backend_URL = "http://localhost:8080";
 const axiosInstance  =  axios.create({baseURL: backend_URL})
@@ -40,4 +41,12 @@ export const updateTodo = async (data: Todo)=>{
 
 export const deleteTodo =  async (id: number)=>{
     await  axiosInstance.delete(`todos/${id}`);
+}
+
+//Paginated Queries
+
+//Each page  give me 3 projects
+export const getProjects =  async (page= 1)=>{
+    return (await axiosInstance.get<Project[]>(`projects?_page=${page}&_limit=3`))
+    .data;
 }
