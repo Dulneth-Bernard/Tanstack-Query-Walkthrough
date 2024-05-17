@@ -3,6 +3,7 @@ import axios from "axios";
 
 import { Todo } from "../types/todo";
 import { Project } from "../types/project";
+import { Product } from "../types/products";
 
 const backend_URL = "http://localhost:8080";
 const axiosInstance  =  axios.create({baseURL: backend_URL})
@@ -49,4 +50,11 @@ export const deleteTodo =  async (id: number)=>{
 export const getProjects =  async (page= 1)=>{
     return (await axiosInstance.get<Project[]>(`projects?_page=${page}&_limit=3`))
     .data;
+}
+//Infinite Queries
+
+export const getProducts = async ({pageParam} : {pageParam : number} )=>{
+    //Perscroll limit to 3
+    return await ((await axiosInstance.get<Product[]>(`products?_page=${pageParam +1 }&_limit=3`)).data);
+
 }

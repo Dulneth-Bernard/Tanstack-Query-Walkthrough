@@ -1,5 +1,5 @@
-import { useQuery, useQueries, keepPreviousData } from "@tanstack/react-query";
-import { getProjects, getTodosIds } from "./api";
+import { useQuery, useQueries, keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
+import { getProducts, getProjects, getTodosIds } from "./api";
 import { getTodo } from "./api";
 
 //Get all the todos
@@ -62,3 +62,32 @@ export function useProjects(page:number){
 // The data from the last successful fetch is available while new data is being requested, even though the query key has changed.
 // When the new data arrives, the previous data is seamlessly swapped to show the new data.
 // isPlaceholderData is made available to know what data the query is currently providing you
+
+//Infinite Queries
+
+
+//Rendering lists that can additively "load more" data onto an existing set of data or "infinite scroll" is also a very common UI pattern. TanStack Query supports a useful version of useQuery called useInfiniteQuery for querying these types of lists
+export function useProducts(){
+//Iffinite scrolling
+  return useInfiniteQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+    initialPageParam:0,
+    getNextPageParam: (lastPage, _, lastPageParam)=>{
+      if(lastPage.length === 0){
+        //NO PAGES
+        return undefined;
+      }
+      return lastPageParam+1;
+    },
+    getPreviousPageParam: (_,__,firstPageParam)=>{
+      if(firstPageParam <=1 ){
+        return undefined;
+      }
+      return firstPageParam - 1;
+    }
+
+
+  });
+}
+//If your API doesn't return a cursor, you can use the pageParam as a cursor. Because getNextPageParam and getPreviousPageParam also get the pageParamof the current page, you can use it to calculate the next / previous page param.
